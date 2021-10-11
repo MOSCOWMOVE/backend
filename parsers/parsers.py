@@ -1,6 +1,6 @@
 import csv
 from person_density.models import MoscowDistrict
-from sport_objects.models import Accessibility, DepartmentalOrganisation, SportType, SportZone
+from sport_objects.models import Accessibility, DepartmentalOrganisation, SportType, SportZone, Position
 
 
 def load_accessibility():
@@ -20,7 +20,7 @@ def parse_sport_data():
         cnt = 0
         for row in reader:
             cnt += 1
-            print(row, cnt)
+            print(cnt)
             org = None
             try:
                 org = DepartmentalOrganisation.objects.get(dep_id=row["id Ведомственной Организации"])
@@ -35,15 +35,18 @@ def parse_sport_data():
                 sportType = SportType.objects.create(name=row["Вид спорта"])
 
             try:
-                sport_zone = SportZone.objects.get(name=row["Объект"])
-                sport_zone.sport_types.add(sportType)
+                sport_zone = SportZone.objects.get(zone_id=row["id Объекта"])
+                sport_zone.sportTypes.add(sportType)
             except:
                 SportZone.objects.create(organization=org,
                                          accessibility=Accessibility.objects.get(name=row["Доступность"]),
+                                         name=row["Объект"],
+                                         zone_id=row["id Объекта"]
                                          )
 
 
 def parse_person_density_data():
+    MoscowDistrict.objects.all().delete()
     with open("parsers/person_density.csv", "r", encoding="utf-8") as file:
         reader = csv.DictReader(file)
         for row in reader:
@@ -52,6 +55,19 @@ def parse_person_density_data():
             MoscowDistrict.objects.create(name=row["Район"], density=row["Население"])
 
 
+def parse_lat_long_data():
+    with open("parsers/lat_long_data.csv", "r", encoding="utf-8") as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            print(row["id Объекта"])
+            try:
+                SportZone.objects.get(zone_id=row["id Объекта"]).position = \
+                    Position.objects.create(latitude=row["Широта (Latitude)"], longitude=row["Долгота (Longitude)"])
+            except: pass
+
+
 load_accessibility()
 parse_person_density_data()
 parse_sport_data()
+
+parse_lat_long_data()

@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "parsers",
     "sport_objects",
-    "person_density"
+    "person_density",
+    "map_operations"
 ]
 
 MIDDLEWARE = [
