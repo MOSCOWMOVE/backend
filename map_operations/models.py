@@ -18,3 +18,12 @@ class Map(models.Model):
         for i in objects_ids:
             group.sport_zones.add(SportZone.objects.get(zone_id=i))
         self.groups.add(group)
+
+    def ungroup_object(self, group_id):
+        group = Group.objects.get(id=group_id)
+        ids = []
+        for i in group.sport_zones:
+            ids.append(i.id)
+        group.delete()
+        for i in ids:
+            self.flat_objects.add(SportZone.objects.get(id=i))

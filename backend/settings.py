@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     "parsers",
     "sport_objects",
     "person_density",
-    "map_operations"
+    "map_operations",
+    "rest_framework"
 ]
 
 MIDDLEWARE = [
@@ -72,7 +73,10 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'backend.wsgi.application'
-
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 100
+}
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases

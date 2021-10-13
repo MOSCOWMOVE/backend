@@ -51,8 +51,9 @@ def parse_person_density_data():
         reader = csv.DictReader(file)
         for row in reader:
             print(row)
-            if not isinstance(row["Население"], int): continue
-            MoscowDistrict.objects.create(name=row["Район"], density=row["Население"])
+            if len(row["Население"]) == 0: continue
+            a = MoscowDistrict.objects.create(name=row["Район"], density=float(row["Население"]))
+            print(a)
 
 
 def parse_lat_long_data():
@@ -61,13 +62,15 @@ def parse_lat_long_data():
         for row in reader:
             print(row["id Объекта"])
             try:
-                SportZone.objects.get(zone_id=row["id Объекта"]).position = \
+                zone = SportZone.objects.get(zone_id=row["id Объекта"])
+                zone.position = \
                     Position.objects.create(latitude=row["Широта (Latitude)"], longitude=row["Долгота (Longitude)"])
+                zone.save()
             except: pass
 
-
+'''
 load_accessibility()
 parse_person_density_data()
 parse_sport_data()
 
-parse_lat_long_data()
+parse_lat_long_data()'''
