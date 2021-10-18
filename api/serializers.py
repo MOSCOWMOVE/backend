@@ -59,3 +59,11 @@ class MoscowDistrictSerializer(serializers.ModelSerializer):
     class Meta:
         model = MoscowDistrict
         fields = ["name", "density"]
+
+
+class GroupInfoSerializer(serializers.Serializer):
+    sportTypes = SportTypeSerializer(many=True)
+    square = serializers.IntegerField()
+    polls = serializers.IntegerField()
+    opened = serializers.IntegerField()
+    closed = serializers.IntegerField()

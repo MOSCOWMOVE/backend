@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import MapDetails, PersonDensity, GetGroups, GetFlatSportZones, SortSportZoneByAccessibility, \
     SortZonesByListOfSportTypes, SortSportZoneByName, SortSportByDepartmentName, SportZoneDetail, SortZones, \
-    DepartmentOrgDetail
+    DepartmentOrgDetail, GroupSportObject, GetInfoFromZones, GetInfoFromGroup, SportTypes
 
 
 urlpatterns = [
@@ -15,5 +15,9 @@ urlpatterns = [
     path("sort_zone_by_dep_name", SortSportByDepartmentName.as_view()),
     path("sport_zone/<pk>", SportZoneDetail.as_view()),
     path("sort_zones", SortZones.as_view()),
-    path("departmental_org/<pk>", DepartmentOrgDetail.as_view())
+    path("departmental_org/<pk>", DepartmentOrgDetail.as_view()),
+    path("group_zones", GroupSportObject.as_view()),
+    path("get_info_from_zones", GetInfoFromZones.as_view()),
+    path("get_info_from_group", GetInfoFromGroup.as_view()),
+    path("sport_types", SportTypes.as_view())
 ]

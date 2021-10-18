@@ -1,6 +1,6 @@
 import csv
 from person_density.models import MoscowDistrict
-from sport_objects.models import Accessibility, DepartmentalOrganisation, SportType, SportZone, Position
+from sport_objects.models import Accessibility, DepartmentalOrganisation, SportType, SportZone, Position, OpenedType
 
 
 def load_accessibility():
@@ -9,6 +9,22 @@ def load_accessibility():
     Accessibility.objects.create(name="Районное", distance=1000)
     Accessibility.objects.create(name="Окружное", distance=3000)
     Accessibility.objects.create(name="Городское", distance=5000)
+
+
+def load_opened_types():
+    OpenedType.objects.all().delete()
+    OpenedType.objects.create(name="Крытое")
+    OpenedType.objects.create(name="Бассейн")
+    OpenedType.objects.create(name="Открытое")
+
+
+def get_sport_type(name: str):
+    opened_type = OpenedType.objects.get(name="Открытое")
+    if "крытая" in name.split() or "крытый" in name:
+        opened_type = OpenedType.objects.get(name="Крытое")
+    if "бассейн" in name.split():
+        opened_type = OpenedType.objects.get(name="Бассейн")
+    return opened_type
 
 
 def parse_sport_data():
@@ -37,12 +53,21 @@ def parse_sport_data():
             try:
                 sport_zone = SportZone.objects.get(zone_id=row["id Объекта"])
                 sport_zone.sportTypes.add(sportType)
+                sport_zone.open_type.add(get_sport_type(row["Тип спортзоны"]))
             except:
-                SportZone.objects.create(organization=org,
-                                         accessibility=Accessibility.objects.get(name=row["Доступность"]),
-                                         name=row["Объект"],
-                                         zone_id=row["id Объекта"]
-                                         )
+                opened_type = get_sport_type(row["Тип спортзоны"])
+                square = row["Площадь спортзоны"]
+                if len(str(row["Площадь спортзоны"])) == 0:
+                    square = 0
+                zone = SportZone.objects.create(organization=org,
+                                                accessibility=Accessibility.objects.get(name=row["Доступность"]),
+                                                name=row["Объект"],
+                                                zone_id=row["id Объекта"],
+                                                square=square,
+                                                address=row["Адрес"]
+                                                )
+                zone.sportTypes.set([sportType])
+                zone.open_type.set([opened_type])
 
 
 def parse_person_density_data():
@@ -66,7 +91,9 @@ def parse_lat_long_data():
                 zone.position = \
                     Position.objects.create(latitude=row["Широта (Latitude)"], longitude=row["Долгота (Longitude)"])
                 zone.save()
-            except: pass
+            except:
+                pass
+
 
 '''
 load_accessibility()
@@ -74,3 +101,5 @@ parse_person_density_data()
 parse_sport_data()
 
 parse_lat_long_data()'''
+load_opened_types()
+parse_sport_data()

@@ -12,6 +12,7 @@ class Map(models.Model):
     groups = models.ManyToManyField(Group)
 
     def group_object(self, objects_ids: [str]):
+        print(objects_ids)
         for i in objects_ids:
             self.flat_objects.remove(SportZone.objects.get(zone_id=i))
         group = Group.objects.create(name="")

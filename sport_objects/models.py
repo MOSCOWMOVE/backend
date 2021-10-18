@@ -20,6 +20,10 @@ class Position(models.Model):
     longitude = models.FloatField()
 
 
+class OpenedType(models.Model):
+    name = models.TextField()
+
+
 class SportZone(models.Model):
     organization = models.ForeignKey(DepartmentalOrganisation, on_delete=models.CASCADE)
     accessibility = models.ForeignKey(Accessibility, on_delete=models.CASCADE)
@@ -27,3 +31,6 @@ class SportZone(models.Model):
     name = models.TextField()
     position = models.ForeignKey(Position, on_delete=models.SET_NULL, null=True)
     zone_id = models.TextField(null=True)
+    open_type = models.ManyToManyField(OpenedType, null=True)
+    square = models.FloatField(null=True)
+    address = models.TextField(null=True)

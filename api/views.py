@@ -2,10 +2,11 @@ from rest_framework import generics
 from rest_framework.response import Response
 
 from .serializers import MapSerializer, MoscowDistrictSerializer, GroupSerializer, SportZoneSerializer, \
-    DepartmentalOrganizationSerializer
+    DepartmentalOrganizationSerializer, GroupInfoSerializer, SportTypeSerializer
 from map_operations.models import Map, Group
 from person_density.models import MoscowDistrict
-from sport_objects.models import Accessibility, SportZone, DepartmentalOrganisation
+from sport_objects.models import Accessibility, SportZone, DepartmentalOrganisation, OpenedType, SportType
+from .getStats import get_stats_from_ids
 
 
 class MapDetails(generics.RetrieveAPIView):
@@ -101,9 +102,51 @@ class SortZones(generics.ListAPIView):
         except KeyError:
             pass
 
+        try:
+            opened_types = self.request.query_params["opened_types"].split(",")
+            res = res.filter(open_type__name__in=opened_types)
+        except KeyError:
+            pass
         return res
 
 
 class DepartmentOrgDetail(generics.RetrieveAPIView):
     serializer_class = DepartmentalOrganizationSerializer
     queryset = DepartmentalOrganisation.objects.all()
+
+
+class GroupSportObject(generics.RetrieveAPIView):
+    serializer_class = GroupSerializer
+
+    def get(self, request, *args, **kwargs):
+        print(self.request.query_params["ids"].split(","))
+        Map.objects.all()[0].group_object(self.request.query_params["ids"].split(","))
+        return Response(200)
+
+
+class GetInfoFromZones(generics.RetrieveAPIView):
+    serializer_class = GroupInfoSerializer
+
+    def get(self, *args, **kwargs):
+        return Response(
+            data=get_stats_from_ids(self.request.query_params["ids"])
+        )
+
+
+class GetInfoFromGroup(generics.RetrieveAPIView):
+    serializer_class = GroupInfoSerializer
+
+    def get(self, *args, **kwargs):
+        return Response(
+            data=get_stats_from_ids(list(
+                map(lambda x: x.zone_id,
+                    Group.objects.get(id=self.request.query_params["id"]).sport_zones.all()
+                    )
+                )
+            )
+        )
+
+
+class SportTypes(generics.ListAPIView):
+    serializer_class = SportTypeSerializer
+    queryset = SportType.objects.all()
