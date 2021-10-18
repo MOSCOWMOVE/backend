@@ -41,7 +41,12 @@ INSTALLED_APPS = [
     "sport_objects",
     "person_density",
     "map_operations",
-    "rest_framework"
+    "rest_framework",
+    "corsheaders"
+]
+
+CORS_ALLOWED_ORIGINS = [
+    '*',
 ]
 
 MIDDLEWARE = [
@@ -52,6 +57,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware'
 ]
 
 ROOT_URLCONF = 'backend.urls'
