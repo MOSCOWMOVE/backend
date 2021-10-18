@@ -32,10 +32,11 @@ class DepartmentalOrganizationSerializer(serializers.ModelSerializer):
 
 class SportZoneSerializer(serializers.ModelSerializer):
     position = PositionSerializer()
+    accessibility = AccessibilitySerializer()
 
     class Meta:
         model = SportZone
-        fields = ["position", "organization", "accessibility", "sportTypes", "name", "zone_id"]
+        fields = ["position", "organization", "accessibility", "sportTypes", "name", "zone_id", "square"]
 
 
 class GroupSerializer(serializers.ModelSerializer):

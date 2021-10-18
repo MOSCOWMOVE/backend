@@ -100,6 +100,8 @@ load_accessibility()
 parse_person_density_data()
 parse_sport_data()
 
-parse_lat_long_data()'''
+parse_lat_long_data()
 load_opened_types()
-parse_sport_data()
+parse_sport_data()'''
+
+parse_lat_long_data()
