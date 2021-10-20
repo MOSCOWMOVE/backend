@@ -98,7 +98,7 @@ class SortZones(generics.ListAPIView):
 
         try:
             dep_name = self.request.query_params["dep_name"]
-            res = res.filter(organization__name=dep_name.split(","))
+            res = res.filter(organization__name__in=dep_name.split(","))
         except KeyError:
             pass
 
