@@ -36,7 +36,7 @@ class SportZoneSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SportZone
-        fields = ["position", "organization", "accessibility", "sportTypes", "name", "zone_id", "square"]
+        fields = ["position", "organization", "accessibility", "sportTypes", "name", "zone_id", "square", "address"]
 
 
 class GroupSerializer(serializers.ModelSerializer):
