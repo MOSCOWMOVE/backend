@@ -147,6 +147,16 @@ class GetInfoFromGroup(generics.RetrieveAPIView):
         )
 
 
+class GetSportZone(generics.RetrieveAPIView):
+    serializer_class = SportZoneSerializer
+
+    def get(self, *args, **kwargs):
+        pk = kwargs.get("pk")
+        return Response(
+            data=SportZoneSerializer(SportZone.objects.get(zone_id=pk)).data
+        )
+
+
 class SportTypes(generics.ListAPIView):
     serializer_class = SportTypeSerializer
     queryset = SportType.objects.all()
