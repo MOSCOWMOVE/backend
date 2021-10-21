@@ -162,6 +162,11 @@ class SportTypes(generics.ListAPIView):
     queryset = SportType.objects.all()
 
 
+class GetSportType(generics.RetrieveAPIView):
+    serializer_class = SportTypeSerializer
+    queryset = SportType.objects.all()
+
+
 class DepOrgs(generics.ListAPIView):
     serializer_class = DepartmentalOrganizationSerializer
     queryset = DepartmentalOrganisation.objects.all()
