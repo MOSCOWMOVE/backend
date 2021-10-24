@@ -95,19 +95,28 @@ class SortZones(generics.ListAPIView):
 
         try:
             accessibility = self.request.query_params["accessibility"].split(",")
-            res = res.filter(accessibility__distance__in=accessibility)
+            if "__all__" in accessibility:
+                res = res.all()
+            else:
+                res = res.filter(accessibility__distance__in=accessibility)
         except KeyError:
             pass
 
         try:
-            dep_name = self.request.query_params["dep_name"]
-            res = res.filter(organization__name__in=dep_name.split(","))
+            dep_name = self.request.query_params["dep_name"].split(",")
+            if "__all__" in dep_name:
+                res = res.all()
+            else:
+                res = res.filter(organization__name__in=dep_name)
         except KeyError:
             pass
 
         try:
             opened_types = self.request.query_params["opened_types"].split(",")
-            res = res.filter(open_type__name__in=opened_types)
+            if "__all__" in opened_types:
+                res = res.all()
+            else:
+                res = res.filter(open_type__name__in=opened_types)
         except KeyError:
             pass
         return res
