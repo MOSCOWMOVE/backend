@@ -87,7 +87,7 @@ class SortZones(generics.ListAPIView):
         try:
             types = self.request.query_params["types"].split(",")
             if "__all__" in types:
-                res = res.objects.all()
+                res = res.all()
             else:
                 res = res.filter(sportTypes__name__in=types)
         except KeyError:
